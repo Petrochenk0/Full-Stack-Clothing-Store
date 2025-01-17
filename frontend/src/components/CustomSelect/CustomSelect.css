@@ -1,0 +1,17 @@
+.product-sort {
+  display: flex;
+  margin-bottom: 20px;
+  margin-left: 170px;
+}
+
+.product-sort label {
+  margin-right: 10px;
+}
+
+.product-sort select {
+  margin-left: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 18px;
+}
