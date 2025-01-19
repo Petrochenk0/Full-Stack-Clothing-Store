@@ -97,4 +97,15 @@ export class UsersService {
     }
     return user.orders;
   }
+
+  async getUserProfile(username: string) {
+    const user = await this.userRepository.findOne({ where: { username } });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return {
+      username: user.username,
+      email: user.email,
+    };
+  }
 }

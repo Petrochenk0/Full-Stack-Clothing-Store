@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 // components
 import Item from '../components/Item/Item';
 // data
@@ -8,11 +8,28 @@ import './CSS/ShopCategory.css';
 // images
 import Dropdown from '../assets/dropdown_icon.png';
 
-export default function ShopCategory(props) {
-  const { AllProduct } = React.useContext(ShopContext);
-  const [sortedProducts, setSortedProducts] = React.useState([]);
-  const [sortBy, setSortBy] = React.useState('');
-  function filterAndSortProducts(category, sortBy) {
+interface Product {
+  id: number;
+  name: string;
+  image: string;
+  old_price: number;
+  new_price: number;
+  category: string;
+  popularity: number;
+  rating: number;
+}
+
+interface ShopCategoryProps {
+  category: string;
+  banner: string;
+}
+
+const ShopCategory: React.FC<ShopCategoryProps> = (props) => {
+  const { AllProduct } = useContext(ShopContext) || { AllProduct: [] as Product[] };
+  const [sortedProducts, setSortedProducts] = useState<Product[]>([]);
+  const [sortBy, setSortBy] = useState<string>('');
+
+  function filterAndSortProducts(category: string, sortBy: string): Product[] {
     // Фильтруем товары по категории
     const filteredProducts = AllProduct.filter((product) => product.category === category);
 
@@ -27,14 +44,17 @@ export default function ShopCategory(props) {
 
     return filteredProducts;
   }
-  React.useEffect(() => {
+
+  useEffect(() => {
     const category = props.category;
     const filteredAndSortedProducts = filterAndSortProducts(category, sortBy);
     setSortedProducts(filteredAndSortedProducts);
   }, [props.category, sortBy]);
-  const handleChange = (event) => {
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(event.target.value);
   };
+
   return (
     <div className="shop-category">
       <img className="banner" src={props.banner} alt="" />
@@ -52,21 +72,20 @@ export default function ShopCategory(props) {
         </p>
       </div>
       <div className="sort-category-products">
-        {sortedProducts.map((item, index) => {
-          // or AllProduct
-          return (
-            <Item
-              key={index}
-              id={item.id}
-              name={item.name}
-              image={item.image}
-              old_price={item.old_price}
-              new_price={item.new_price}
-            />
-          );
-        })}
+        {sortedProducts.map((item, index) => (
+          <Item
+            key={index}
+            id={item.id}
+            name={item.name}
+            image={item.image}
+            old_price={item.old_price}
+            new_price={item.new_price}
+          />
+        ))}
       </div>
       <div className="loadmore">Explore more</div>
     </div>
   );
-}
+};
+
+export default ShopCategory;
