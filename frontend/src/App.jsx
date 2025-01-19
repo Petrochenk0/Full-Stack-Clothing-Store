@@ -4,8 +4,10 @@ import Shop from './pages/Shop';
 import ShopCategory from './pages/ShopCategory';
 import Product from './pages/Product';
 import Cart from './pages/Cart';
-import LoginSignup from './pages/LoginSignup';
+import SignUp from './pages/SignUp';
 import Footer from './components/Footer/Footer';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
 // Tools
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // Images
@@ -26,7 +28,9 @@ function App() {
             <Route path=":productId" element={<Product />} />
           </Route>
           <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<LoginSignup />} />
+          <Route path="/registry" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />
       </BrowserRouter>

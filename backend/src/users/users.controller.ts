@@ -53,4 +53,11 @@ export class UsersController {
     const username = req.user.username;
     return this.usersService.getOrderHistory(username);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getUserProfile(@Request() req) {
+    const username = req.user.username;
+    return this.usersService.getUserProfile(username);
+  }
 }

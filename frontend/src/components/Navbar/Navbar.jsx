@@ -1,21 +1,23 @@
-// library and hooks
 import React from 'react';
-// context
+
 import { ShopContext } from '../../Context/ShopContext';
-//styles
+
 import './Navbar.css';
-// png for navbar
+
 import Logo from '../../assets/logo.png';
 import Cart from '../../assets/cart_icon.png';
-// features
-import { Link } from 'react-router-dom';
+
+import { Link, useNavigate } from 'react-router-dom';
+
 export default function Navbar() {
   const [choiceMenu, setChoiceMenu] = React.useState('shop');
   const { getTotalQuantity } = React.useContext(ShopContext);
+  const navigate = useNavigate();
+  const username = localStorage.getItem('username');
 
   return (
     <div className="navbar">
-      <div className="logo">
+      <div className="logo" onClick={() => navigate('/')}>
         <img src={Logo} alt="" />
         <p>SHOPPER</p>
       </div>
@@ -46,11 +48,17 @@ export default function Navbar() {
         </li>
       </ul>
       <div className="navigation-login-cart">
-        <button>
-          <Link style={{ textDecoration: 'none', color: '#3b3a3a' }} to="/login">
-            Login
-          </Link>
-        </button>
+        {username ? (
+          <button className="profile-btn" onClick={() => navigate('/profile')}>
+            {username}
+          </button>
+        ) : (
+          <button>
+            <Link style={{ textDecoration: 'none', color: '#3b3a3a' }} to="/registry">
+              Sign Up
+            </Link>
+          </button>
+        )}
         <Link style={{ textDecoration: 'none' }} to="/cart">
           <img src={Cart} alt="" />
         </Link>

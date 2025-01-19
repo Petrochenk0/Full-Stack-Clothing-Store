@@ -1,5 +1,3 @@
-// library
-import React from 'react';
 // styles
 import './CustomSelect.css';
 
