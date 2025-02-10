@@ -8,32 +8,50 @@ interface UserData {
   email: string;
 }
 
+interface OrderItem {
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+interface Order {
+  id: number;
+  items: OrderItem[];
+  total: number;
+  createdAt: string;
+}
+
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState<Order[]>([]);
 
   // Get user data when component mounts 🔄
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem('accessToken');
-        const response = await axios.get('http://localhost:8000/api/users/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserData(response.data);
+        const [userResponse, ordersResponse] = await Promise.all([
+          axios.get('http://localhost:8000/api/users/profile', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get('http://localhost:8000/api/users/order-history', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        setUserData(userResponse.data);
+        setOrders(ordersResponse.data);
       } catch (error) {
-        console.error('Failed to fetch user data 😢', error);
-        // If token is invalid, redirect to login
+        console.error('Failed to fetch data 😢', error);
         navigate('/login');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserData();
+    fetchData();
   }, [navigate]);
 
   const handleLogout = () => {
@@ -71,8 +89,27 @@ const Profile: React.FC = () => {
             </div>
             <div className="profile-section">
               <h3>Order History 🛍️</h3>
-              {/* Add order history here when implemented */}
-              <p>No orders yet</p>
+              {orders.length === 0 ? (
+                <p>No orders yet</p>
+              ) : (
+                orders.map((order) => (
+                  <div key={order.id} className="order-item">
+                    <p className="order-date">
+                      Order date: {new Date(order.createdAt).toLocaleDateString()}
+                    </p>
+                    {order.items.map((item, index) => (
+                      <div key={index} className="order-product">
+                        <p>
+                          {item.name} x{item.quantity}
+                        </p>
+                        <p>${item.price}</p>
+                      </div>
+                    ))}
+                    <p className="order-total">Total: ${order.total}</p>
+                    <hr />
+                  </div>
+                ))
+              )}
             </div>
           </div>
           <button className="logout-btn" onClick={handleLogout}>
