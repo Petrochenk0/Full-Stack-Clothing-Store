@@ -60,3 +60,28 @@
 .logout-btn:hover {
   background: #ff3333;
 }
+
+.order-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 10px;
+}
+
+.order-date {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.order-product {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+
+.order-total {
+  font-weight: bold;
+  text-align: right;
+  margin-top: 10px;
+  color: #ff4d4d;
+}

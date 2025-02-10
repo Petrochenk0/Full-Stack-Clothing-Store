@@ -1,14 +1,60 @@
 // library
 import React from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 // styles
 import './CartItems.css';
 // context data
 import { ShopContext } from '../../Context/ShopContext';
 // assets
 import Remove from '../../assets/cart_cross_icon.png';
+
 export default function CartItems() {
-  const { AllProduct, deleteFromCart, cartItems, setCartItems, getTotalPrice } =
-    React.useContext(ShopContext);
+  const { AllProduct, deleteFromCart, cartItems, getTotalPrice } = React.useContext(ShopContext);
+  const navigate = useNavigate();
+
+  const handleCheckout = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      // Prepare order items
+      const orderItems = AllProduct.reduce((items, product) => {
+        if (cartItems[product.id] > 0) {
+          items.push({
+            name: product.name,
+            price: product.new_price,
+            quantity: cartItems[product.id],
+          });
+        }
+        return items;
+      }, []);
+
+      // Send order to backend
+      await axios.post(
+        'http://localhost:8000/api/users/order',
+        {
+          items: orderItems,
+          total: getTotalPrice(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // Clear cart and redirect to profile
+      navigate('/profile');
+      window.location.reload(); // To refresh cart
+    } catch (error) {
+      console.error('Failed to process order 😢', error);
+    }
+  };
 
   return (
     <div className="cart-items">
@@ -26,6 +72,7 @@ export default function CartItems() {
           // if the product is in the user's cart we show it to him
           return (
             <div key={elementInCart.id}>
+            <div className="" key={elementInCart.id}>
               <div className="cart-items-format main-format">
                 <img src={elementInCart.image} alt="" className="product-icon" />
                 <p className="">{elementInCart.name}</p>
@@ -66,7 +113,7 @@ export default function CartItems() {
               <p className="">${getTotalPrice()}</p>
             </div>
           </div>
-          <button>PROCEED TO CHECKOUT</button>
+          <button onClick={handleCheckout}>PROCEED TO CHECKOUT</button>
         </div>
         <div className="promocode">
           <p>If you have promo code, Enter it here</p>
