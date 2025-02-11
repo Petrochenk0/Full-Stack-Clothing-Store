@@ -71,6 +71,7 @@ export default function CartItems() {
         if (cartItems[elementInCart.id] > 0) {
           // if the product is in the user's cart we show it to him
           return (
+            <div key={elementInCart.id}>
             <div className="" key={elementInCart.id}>
               <div className="cart-items-format main-format">
                 <img src={elementInCart.image} alt="" className="product-icon" />

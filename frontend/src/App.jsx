@@ -1,3 +1,4 @@
+import React from 'react';
 // Components
 import Navbar from './components/Navbar/Navbar';
 import Shop from './pages/Shop';
@@ -10,13 +11,17 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 // Tools
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // Images
 import MensBanner from './assets/banner_mens.png';
 import WomensBanner from './assets/banner_women.png';
 import KidsBanner from './assets/banner_kids.png';
+
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -34,7 +39,7 @@ function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
-    </>
+    </QueryClientProvider>
   );
 }
 
