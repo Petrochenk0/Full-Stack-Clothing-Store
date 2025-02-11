@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import Cart from '../pages/Cart';
 import { ShopContext } from '../Context/ShopContext';
 
@@ -15,9 +16,11 @@ const mockContextValue = {
 
 test('renders Cart component', () => {
   render(
-    <ShopContext.Provider value={mockContextValue}>
-      <Cart />
-    </ShopContext.Provider>,
+    <BrowserRouter>
+      <ShopContext.Provider value={mockContextValue}>
+        <Cart />
+      </ShopContext.Provider>
+    </BrowserRouter>,
   );
   const linkElement = screen.getByText(/Products/i);
   expect(linkElement).toBeInTheDocument();

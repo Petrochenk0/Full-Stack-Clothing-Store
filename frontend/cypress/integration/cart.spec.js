@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe('Cart Page', () => {
   it('should display products in the cart', () => {
     cy.visit('/cart');
